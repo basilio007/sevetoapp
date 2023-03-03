@@ -1,0 +1,198 @@
+///////////LOGIN//////////////
+
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'package:flutter/services.dart';
+import 'package:prueba/Etiquetas/decoraciones.dart';
+import 'package:prueba/coneccio_sql/usuario_provider.dart';
+
+
+
+class login extends StatelessWidget{
+   login({Key? key}) : super(key: key);
+
+  final user = TextEditingController();
+  final password = TextEditingController();
+
+   String usuario = "";
+   String clave = "";
+
+  @override
+  Widget build(BuildContext context){
+    final size = MediaQuery.of(context).size;
+    return Scaffold(
+      body: SizedBox(
+        width: double.maxFinite,
+        height: double.maxFinite,
+        child: Stack(
+          children: [
+            cuadro_bicolor_pricipal(size),
+
+    icono_persona_principal(),
+
+
+   campo_login(context)
+          ],
+        ),
+      ),
+    );
+  }
+
+  SingleChildScrollView campo_login(BuildContext context) {
+
+    return SingleChildScrollView(
+      child: Column(
+       children: [const SizedBox(height: 340),
+     Container(
+       padding: const EdgeInsets.all(20),
+       margin: const EdgeInsets.symmetric(horizontal: 15),
+       width: double.infinity,
+       //height: 90,
+       decoration: BoxDecoration(color: Colors.white,
+         borderRadius: BorderRadius.circular(25),
+         boxShadow: const [
+           BoxShadow(
+             color: Colors.black38,
+             blurRadius: 20,
+             offset: Offset(0, 5),
+           )
+         ]),
+
+//Camopo del login
+child: Column(
+children: [
+  const SizedBox(height: 10),
+  Text('Login', style: Theme.of(context).textTheme.headlineLarge),
+  const SizedBox(height: 30),
+  Container(
+    //campo de verificacion
+    child: Form(
+      child: Column(
+        children: [
+          //caja de texto
+          TextFormField(
+            autocorrect: false,
+            decoration:  decorations.InputDecorations(hintext: 'Introduzca tu nombre', labeltext: 'Nombre', icon: const Icon(Icons.person))
+          ),
+          const SizedBox(height: 20),
+
+          TextFormField(
+            autocorrect: false,
+            obscureText: true,
+            decoration: decorations.InputDecorations(hintext: 'Introduzca tu contaseña', labeltext: 'Contraseña', icon: const Icon(Icons.key))
+          ),
+          const SizedBox(height: 20),
+
+MaterialButton(
+  shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10)),
+  disabledColor: Colors.black45,
+  color: Colors.deepPurple,
+  child: Container(
+    padding: const EdgeInsets.symmetric(
+        horizontal: 50, vertical: 20),
+    child: const Text(
+        'Ingresar a la APP', style: TextStyle(color: Colors.white),
+    ),
+  ),
+  onPressed: () {
+    usuario = user.text;
+    clave = password.text;
+
+
+    Navigator.pushReplacementNamed(context, 'menu');
+  },
+)
+
+        ],
+      ),
+
+    ),
+  )
+],
+
+) ),
+const SizedBox(height: 50),
+     const Text('Iniciar Seción',style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+     )
+   ],
+      ),
+ );
+  }
+
+  Container icono_persona_principal() {
+    return Container(
+    margin: const EdgeInsets.only(top: 50),
+    width: double.infinity,
+    child: const Icon(Icons.person_pin, color:Colors.white, size: 100),
+  );
+  }
+
+  Container cuadro_bicolor_pricipal(Size size) {
+    return Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(colors: [
+                Color.fromRGBO(63, 63, 156, 2),
+                Color.fromARGB(90, 70, 178, 1),
+              ])
+            ),
+            width: double.infinity,
+            height: size.height * 0.4,
+            child: Stack(
+              children: [
+                Positioned(top: 90, left: 30, child: Burbuja()),
+                Positioned(top: -10, right: -36, child: Burbuja()),
+                Positioned(top: -50, left: -26, child: Burbuja()),
+                Positioned(top: -10, right: -60, child: Burbuja()),
+                Positioned(bottom: -5, left: -10, child: Burbuja()),
+              ],
+
+            ),
+          );
+  }
+
+  Container Burbuja() {
+    return Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: Color.fromRGBO(255, 255, 255, 0.05)
+                  ),
+                );
+  }
+}
+
+/////////MAIN/////////////
+
+import 'package:flutter/material.dart';
+import 'package:prueba/coneccio_sql/usuario_provider.dart';
+import 'package:prueba/pantallas/Login.dart';
+import 'package:flutter/services.dart';
+import 'package:prueba/pantallas/menu.dart';
+import 'package:provider/provider.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget{
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => usuario_provider())
+      ],
+      child: MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'MaterialApp',
+      routes: {
+        'logeo': (_) => login(),
+        'menu': (_) => mainmenu(),
+      },
+      initialRoute: 'logeo',
+    ),
+
+    );
+  }
+
+}
